@@ -1,8 +1,6 @@
 name: Deploy Frontend to GitHub Pages
 
 on:
-  schedule:
-    - cron: "0 */3 * * *" # Runs every 3 hours
   push:
     branches:
       - LSTM_station
