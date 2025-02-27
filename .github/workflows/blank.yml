@@ -11,10 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: /home/runner/work/NuCast/NuCast/temp_normals
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -22,16 +18,21 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14' 
+          node-version: '14'
+
+      - name: Create temp_normals directory
+        run: mkdir -p ./temp_normals
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./temp_normals
 
       - name: Build frontend
         run: npm run build
+        working-directory: ./temp_normals
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /home/runner/work/NuCast/NuCast/temp_normals/build
+          publish_dir: ./frontend/build
