@@ -5,33 +5,44 @@ import axios from 'axios';
 
 const WeatherDashboard = () => {
   const [weatherData, setWeatherData] = useState(null);
-  const [metarData, setMetarData] = useState(null);
-  const latitude = 40.7128; // Example latitude for New York
-  const longitude = -74.0060; // Example longitude for New York
-  const station = "KJFK"; // Example METAR station
+  const [sunriseSunsetData, setSunriseSunsetData] = useState([]);
+  const latitude = 28.0836; // Latitude for Melbourne, Florida
+  const longitude = -80.6081; // Longitude for Melbourne, Florida
 
   useEffect(() => {
     const fetchWeatherData = async () => {
-      const weatherResponse = await axios.get(`/weather/${latitude}/${longitude}`);
-      setWeatherData(weatherResponse.data);
-    };
+      try {
+        const weatherResponse = await axios.get(`http://localhost:8000/weather/${latitude}/${longitude}`);
+        setWeatherData(weatherResponse.data);
 
-    const fetchMetarData = async () => {
-      const metarResponse = await axios.get(`/metar/${station}`);
-      setMetarData(metarResponse.data);
+        // Fetch sunrise and sunset times for the next 5 days
+        const now = new Date();
+        const sunriseSunsetPromises = [];
+        for (let i = 0; i < 5; i++) {
+          const date = new Date(now);
+          date.setDate(now.getDate() + i);
+          const formattedDate = date.toISOString().split('T')[0];
+          sunriseSunsetPromises.push(
+            axios.get(`http://localhost:8000/sunrise-sunset/${latitude}/${longitude}/${formattedDate}`)
+          );
+        }
+        const sunriseSunsetResponses = await Promise.all(sunriseSunsetPromises);
+        setSunriseSunsetData(sunriseSunsetResponses.map(response => response.data));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
     fetchWeatherData();
-    fetchMetarData();
-  }, []);
+  }, [latitude, longitude]);
 
   return (
-    <div className="weather-dashboard">
-      <div className="left-panel">
-        <Plot weatherData={weatherData} />
+    <div className="weather-dashboard" style={{ display: 'flex' }}>
+      <div className="left-panel" style={{ flex: 1 }}>
+        <Plot weatherData={weatherData} sunriseSunsetData={sunriseSunsetData} latitude={latitude} longitude={longitude} />
       </div>
-      <div className="right-panel">
-        <Map latitude={latitude} longitude={longitude} station={station} />
+      <div className="right-panel" style={{ flex: 1 }}>
+        <Map latitude={latitude} longitude={longitude} />
       </div>
     </div>
   );

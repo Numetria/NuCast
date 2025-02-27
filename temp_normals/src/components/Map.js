@@ -1,19 +1,16 @@
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 
-const Map = ({ latitude, longitude, station }) => {
+const Map = ({ latitude, longitude }) => {
+  const iframeSrc = `https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=m/s&zoom=8&overlay=wind&product=ecmwf&level=surface&lat=${latitude}&lon=${longitude}&detailLat=${latitude}&detailLon=${longitude}&marker=true&pressure=true&message=true`;
+
   return (
-    <MapContainer center={[latitude, longitude]} zoom={13} style={{ height: "400px", width: "100%" }}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={[latitude, longitude]}>
-        <Popup>
-          METAR Station: {station}
-        </Popup>
-      </Marker>
-    </MapContainer>
+    <iframe
+      width="650"
+      height="450"
+      src={iframeSrc}
+      frameborder="0"
+      title="Weather Map"
+    ></iframe>
   );
 };
 
