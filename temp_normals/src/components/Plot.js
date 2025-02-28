@@ -34,6 +34,7 @@ const Plot = ({ weatherData, sunriseSunsetData, latitude, longitude }) => {
   const filteredData = weatherData.filter(entry => new Date(entry.date) <= fiveDaysLater);
 
   const tempValues = filteredData.map(entry => entry.temperature_2m);
+  const heatIndexValues = filteredData.map(entry => entry.heat_index);
   const avgTemp = tempValues.reduce((a, b) => a + b, 0) / tempValues.length;
 
   const data = {
@@ -45,6 +46,15 @@ const Plot = ({ weatherData, sunriseSunsetData, latitude, longitude }) => {
         borderColor: 'rgba(255,0,0,1)',
         backgroundColor: 'rgba(255,0,0,0.2)',
         fill: false,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Heat Index',
+        data: heatIndexValues,
+        borderColor: 'rgba(0,0,255,1)',
+        backgroundColor: 'rgba(0,0,255,0.2)',
+        fill: false,
+        yAxisID: 'y1',
       },
     ],
   };
@@ -88,7 +98,7 @@ const Plot = ({ weatherData, sunriseSunsetData, latitude, longitude }) => {
       },
       title: {
         display: true,
-        text: 'Temperature Over Time',
+        text: 'Temperature and Heat Index Over Time',
       },
       tooltip: {
         callbacks: {
@@ -141,6 +151,18 @@ const Plot = ({ weatherData, sunriseSunsetData, latitude, longitude }) => {
         title: {
           display: true,
           text: 'Temperature (°C)',
+        },
+        position: 'left',
+      },
+      y1: {
+        type: 'linear',
+        title: {
+          display: true,
+          text: 'Heat Index (°C)',
+        },
+        position: 'right',
+        grid: {
+          drawOnChartArea: false, // only want the grid lines for one axis
         },
       },
     },
