@@ -1,1 +1,13 @@
 *.csv
+
+# Scratch: throwaway scripts, captured responses, generated figures.
+# Regenerable and sometimes large; see AGENTS.md for what belongs where.
+.scratch-*/
+.scratch-*.py
+
+# macOS sidecars, from the copy these trees arrived in
+._*
+.DS_Store
+
+# Python bytecode
+__pycache__/

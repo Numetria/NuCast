@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "api-check": {
+      "model": "ollama-cloud/glm-5.3-flash",
+      "permission": { "edit": "deny" }
+    },
+    "frontend-ux": {
+      "model": "ollama-cloud/glm-5.3-flash",
+      "permission": { "edit": "deny" }
+    },
+    "netcdf-io": {
+      "model": "ollama-cloud/glm-5.3-flash",
+      "permission": { "edit": "deny" }
+    },
+    "station-data": {
+      "model": "ollama-cloud/deepseek-v4-pro",
+      "permission": { "edit": "deny" }
+    }
+  },
+  "permission": {
+    "external_directory": {
+      "/mnt/data/Datasets/nucast_work/**": "allow",
+      "*": "ask"
+    }
+  }
+}
