@@ -12,6 +12,7 @@
     "chartjs-adapter-date-fns": "^2.0.0",
     "date-fns-tz": "^1.1.7"
   },
+  "homepage": "https://numetria.github.io/NuCast/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
