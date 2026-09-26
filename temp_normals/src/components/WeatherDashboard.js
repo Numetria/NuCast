@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Plot from './Plot';
 import Map from './Map';
-import axios from 'axios';
 
 const WeatherDashboard = () => {
   const [weatherData, setWeatherData] = useState(null);
@@ -12,10 +11,17 @@ const WeatherDashboard = () => {
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
-        const weatherResponse = await axios.get(`http://localhost:8000/weather/${latitude}/${longitude}`);
-        setWeatherData(weatherResponse.data);
+        // Open-Meteo is CORS-enabled; call it straight from the browser.
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,relative_humidity_2m`;
+        const weatherResponse = await fetch(weatherUrl);
+        const weatherJson = await weatherResponse.json();
+        const times = weatherJson.hourly?.time ?? [];
+        const temps = weatherJson.hourly?.temperature_2m ?? [];
+        setWeatherData(
+          times.map((date, i) => ({ date, temperature_2m: temps[i] }))
+        );
 
-        // Fetch sunrise and sunset times for the next 5 days
+        // Sunrise-sunset for the next 5 days.
         const now = new Date();
         const sunriseSunsetPromises = [];
         for (let i = 0; i < 5; i++) {
@@ -23,13 +29,19 @@ const WeatherDashboard = () => {
           date.setDate(now.getDate() + i);
           const formattedDate = date.toISOString().split('T')[0];
           sunriseSunsetPromises.push(
-            axios.get(`http://localhost:8000/sunrise-sunset/${latitude}/${longitude}/${formattedDate}`)
+            fetch(
+              `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&date=${formattedDate}&formatted=0`
+            ).then((r) => r.json())
           );
         }
-        const sunriseSunsetResponses = await Promise.all(sunriseSunsetPromises);
-        setSunriseSunsetData(sunriseSunsetResponses.map(response => response.data));
+        const responses = await Promise.all(sunriseSunsetPromises);
+        setSunriseSunsetData(
+          responses
+            .filter((r) => r.status === 'OK' && r.results)
+            .map((r) => ({ sunrise: r.results.sunrise, sunset: r.results.sunset }))
+        );
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
