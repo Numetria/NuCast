@@ -11,8 +11,8 @@
     "chart.js": "^4.0.0",
     "chartjs-adapter-date-fns": "^2.0.0",
     "chartjs-plugin-annotation": "^3.1.0",
-    "date-fns": "^2.30.0",
-    "date-fns-tz": "^1.1.7"
+    "date-fns": "^3.0.0",
+    "date-fns-tz": "^3.0.0"
   },
   "homepage": "https://numetria.github.io/NuCast/",
   "scripts": {
