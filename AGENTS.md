@@ -139,10 +139,14 @@ conversation.
   "fix" them into config without saying so; the current behaviour is known.
 - `temp_normals` is deployed by CI on every push to `main`. Do not push a
   frontend change that does not build (`npm run build`).
-- `src/App.js` in `test_app/netcdf-viewer/` is a backend file. Keep that in
-  mind before rewiring it into a frontend.
+- The netCDF viewer backend lives at `test_app/netcdf-viewer/src/backend.py`;
+  its coordinate-detection logic is `generic_handler.py` beside it. The React
+  frontend is `src/App.js`.
 - Do not invent new theories or new algorithms. NuCast is a visualization and
   data-handling tool, not a research project.
+- Every response must either contain a tool call or state that the whole task
+  is complete. Never end a response by describing what will be done next; do
+  it.
 
 ## Git rules
 
